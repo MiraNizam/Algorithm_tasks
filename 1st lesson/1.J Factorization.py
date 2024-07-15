@@ -16,25 +16,16 @@
 
 def factorization():
     number = int(input())
-
-    numbers = list(range(number + 1)) # список всех чисел до заданного числа
-    numbers[0] = numbers[1] = False # указываем, что числа 0 и 1 не простые
-    simple_numbers = [] # собираем все простые числа до заданного числа
-
-    for n in range(2, number):
-        if numbers[n]:
-            for j in range(n * n, number + 1, n):
-                numbers[j] = False
-    for i in numbers:
-        if i:
-            simple_numbers.append(i)
-    divisors = []
-    while number > 1:
-        for i in simple_numbers:
-            if number % i == 0:
-                divisors.append(i)
-                number //= i
-    return divisors
+    least_divisors = [] # создаем пустой список для будущих наименьших делителей
+    i = 2 # берем наименьший простой делитель для проверки
+    while i * i <= number: # если у числа 𝑛 есть делитель, больший корень от 𝑛, то существует и делитель, меньший корень от 𝑛.
+        while number % i == 0: # если условие выполнится, у нас будет +наименьший простой делитель
+            least_divisors.append(i)
+            number = number // i
+        i = i + 1
+    if number > 1:
+        least_divisors.append(number)
+    return " ".join(map(str, sorted(least_divisors)))
 
 
 if __name__ == "__main__":

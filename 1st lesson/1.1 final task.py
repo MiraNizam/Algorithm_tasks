@@ -20,15 +20,49 @@ A. Ближайший ноль
 def find_destination_to_null():
     street_length = int(input())
     home_numbers = list(map(int, input().split(" ")))
-    left_null = 6 #"находим крайний левый ноль, индекс"
-    right_null = 12 #"находим крайний правый ноль, индекс"
 
-    for i in range(left_null,street_length+1):
-        print(home_numbers[i]) 
-    for i in range(right_null, -1, -1):
-        print(home_numbers[i])
+
+    left_null = home_numbers.index(0)
+    right_null = street_length - 1 - home_numbers[::-1].index(0)
+
+    left_checking = []
+    right_checking = []
+
+    count = 0
+    for i in range(street_length):
+        if home_numbers[i] == 0:
+            left_checking.append(0)
+            count = 0
+        elif home_numbers[i] != 0 and left_null > i:
+            left_checking.append(street_length)
+        else:
+            count += 1
+            left_checking.append(count)
+
+    count = 0
+    for i in range(street_length)[::-1]:
+        if home_numbers[i] == 0:
+            right_checking.append(0)
+            count = 0
+        elif home_numbers[i] != 0 and right_null < i:
+            right_checking.append(street_length)
+        else:
+            count += 1
+            right_checking.append(count)
+
+    right_checking.reverse()
+
+    result = []
+    for i in range(street_length):
+        destination_to_null = min(left_checking[i], right_checking[i])
+        result.append(destination_to_null)
+
+    return " ".join([str(i) for i in result])
+
 
 if __name__ == "__main__":
     print(find_destination_to_null())
 
 
+# 13
+# 1 2 3 4 5 0 6 7 8 9 0 10 11

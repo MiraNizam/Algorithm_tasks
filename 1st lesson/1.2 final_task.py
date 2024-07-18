@@ -31,7 +31,11 @@ B. Ловкость рук
 
 Формат вывода
 Выведите единственное число -— максимальное количество баллов, которое смогут набрать Гоша и Тимофей.
+
+https://contest.yandex.ru/contest/22450/run-report/116157747/
 """
+from collections import Counter
+
 
 def find_max_points():
     max_buttons_for_one = int(input())
@@ -42,14 +46,10 @@ def find_max_points():
         row = [i for i in input()]
         matrix.extend(row)
 
-    amount = {i: matrix.count(i) for i in matrix if i != "."}
+    amount = Counter(matrix)
+    del amount["."]
 
-    points = 0
-    for value in amount.values():
-        if value <= max_buttons_for_two:
-            points += 1
-
-    return points
+    return sum(value <= max_buttons_for_two for value in amount.values())
 
 
 if __name__ == '__main__':

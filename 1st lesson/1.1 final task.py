@@ -14,13 +14,13 @@ A. Ближайший ноль
 Для каждого из участков выведите расстояние до ближайшего нуля. Числа выводите в одну строку, разделяя их пробелами.
 
 
+https://contest.yandex.ru/contest/22450/run-report/116154179/
 """
 
 
 def find_destination_to_null():
     street_length = int(input())
     home_numbers = list(map(int, input().split(" ")))
-
 
     left_null = home_numbers.index(0)
     right_null = street_length - 1 - home_numbers[::-1].index(0)
@@ -62,7 +62,3 @@ def find_destination_to_null():
 
 if __name__ == "__main__":
     print(find_destination_to_null())
-
-
-# 13
-# 1 2 3 4 5 0 6 7 8 9 0 10 11

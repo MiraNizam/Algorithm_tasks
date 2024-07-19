@@ -24,18 +24,17 @@ if LOCAL:
 
 def solution(node, idx):
     """delete random element"""
-    # def insert_node(head, index, value):
-    #     new_node = Node(value)
-    # if index == 0:
-    #         new_node.next = head
-    #             return new_node
     while idx:
         node = node.next
         idx -= 1
 
     previous_node = get_node_by_index(head, index-1)
+
     new_node.next = previous_node.next
     previous_node.next = new_node
+
+    previous_node =
+
     return head
 
 

@@ -38,7 +38,7 @@ class StackMax:
 
     def top(self):
         if self.items:
-            self.items[-1]
+            print(self.items[-1])
         else:
             print("error")
 

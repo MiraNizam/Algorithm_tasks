@@ -23,6 +23,7 @@ class StackMax:
     def push(self, item):
         self.items.append(item)
 
+
     def pop(self):
         if self.items:
             self.items.pop()
@@ -34,6 +35,12 @@ class StackMax:
             print(max(self.items))
         else:
             print("None")
+
+    def top(self):
+        if self.items:
+            self.items[-1]
+        else:
+            print("error")
 
 
 def work_stack_max():
@@ -50,6 +57,7 @@ def work_stack_max():
             new_stack.pop()
         elif command.startswith("get_max"):
             new_stack.get_max()
+
 
 if __name__ == '__main__':
     work_stack_max()

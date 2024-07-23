@@ -24,19 +24,17 @@ def get_node_by_index(node, idx):
         idx -= 1
     return node
 
+
 def solution(node, idx):
     if idx == 0:
         node = node.next_item
-        return (node)
+        return node
     previous_node = get_node_by_index(node, idx-1)
     deleted_node = get_node_by_index(node, idx)
     if deleted_node.next_item is None:
         previous_node.next_item = None
     previous_node.next_item = deleted_node.next_item
-    while node:
-        print(node.value, end="\n")
-        node = node.next_item
-    # print(node)
+    print(node)
 
 
 # def test():

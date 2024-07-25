@@ -19,22 +19,24 @@ class RingBufferDeque:
         return self.size == 0
 
     def push_back(self, x):
+        if self.head == 0 and self.tail == 0:
+            self.head = -1
         if self.size != self.max_size:
-            if self.head == 0 and self.tail == 0:
-                self.head = -1
-            self.deque[self.tail] = x
-            self.tail = self.tail + 1
+            self.deque[self.tail] = x # error
+            self.tail = (self.tail + 1) % self.max_size
             self.size += 1
+            print(self.deque, self.head, self.tail)
         else:
             print("error")
 
     def push_front(self, x):
+        if self.head == 0 and self.tail == 0:
+            self.tail = 1
         if self.size != self.max_size:
-            if self.head == 0 and self.tail == 0:
-                self.tail = 1
-            self.deque[self.head] = x
-            self.head = self.head - 1
+            self.deque[self.head] = x # error
+            self.head = (self.head - 1) % self.max_size
             self.size += 1
+            print(self.deque, self.head, self.tail)
         else:
             print("error")
 
@@ -42,7 +44,7 @@ class RingBufferDeque:
         if self.is_empty():
             print("error")
         else:
-            self.tail = self.tail - 1
+            self.tail = (self.tail - 1) % self.max_size
             x = self.deque[self.tail]
             self.deque[self.tail] = None
             self.size -= 1
@@ -54,7 +56,7 @@ class RingBufferDeque:
         if self.is_empty():
             print("error")
         else:
-            self.head = self.head + 1
+            self.head = (self.head + 1) % self.max_size
             x = self.deque[self.head]
             self.deque[self.head] = None
             self.size -= 1

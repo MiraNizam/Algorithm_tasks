@@ -22,7 +22,7 @@ class RingBufferDeque:
         if self.head == 0 and self.tail == 0:
             self.head = -1
         if self.size != self.max_size:
-            self.deque[self.tail] = x # error
+            self.deque[self.tail] = x
             self.tail = (self.tail + 1) % self.max_size
             self.size += 1
             print(self.deque, self.head, self.tail)

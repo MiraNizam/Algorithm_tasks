@@ -1,17 +1,30 @@
 """
 -- ПРИНЦИП РАБОТЫ --
--- ДОКАЗАТЕЛЬСТВО КОРРЕКТНОСТИ --
--- ВРЕМЕННАЯ СЛОЖНОСТЬ --
--- ПРОСТРАНСТВЕННАЯ СЛОЖНОСТЬ --
--- ID успешной посылки --
+Решение реализовано с помощью структуры данных Дек на кольцевом буфере. Представляет собой список элементов, в который
+можно эффективно добавлять и удалять элементы с обоих концов, а кольцевой буфер представляет собой циклическую
+реализацию, где есть ограничения по кол-ву элементов, т.к. задается максимальный размер и алгоритм будет сталкиваться с
+переполнением, но преимуществом является экономия памяти для новых элементов.
 
+-- ДОКАЗАТЕЛЬСТВО КОРРЕКТНОСТИ --
+Из описания следует, что мы реализуем в принципы LIFO и FIFO. Мы сначала проверяем массив на достижение максимального
+размера, после добавляем/удаляем по индексу в конец или начало.
+
+-- ВРЕМЕННАЯ СЛОЖНОСТЬ --
+все операции выполняются за O(1)
+
+-- ПРОСТРАНСТВЕННАЯ СЛОЖНОСТЬ --
+т.к.мы храним весь объем полученных данных в массиве для дальнейшей удобной обработки, то сложность будет О(n)
+
+-- ID успешной посылки --
+https://contest.yandex.ru/contest/22781/run-report/116444534/
 """
+
 
 class RingBufferDeque:
     def __init__(self, max_size):
         self.deque = [None] * max_size
         self.max_size = max_size
-        self.head = 0
+        self.head = -1
         self.tail = 0
         self.size = 0
 
@@ -19,24 +32,18 @@ class RingBufferDeque:
         return self.size == 0
 
     def push_back(self, x):
-        if self.head == 0 and self.tail == 0:
-            self.head = -1
         if self.size != self.max_size:
             self.deque[self.tail] = x
             self.tail = (self.tail + 1) % self.max_size
             self.size += 1
-            print(self.deque, self.head, self.tail)
         else:
             print("error")
 
     def push_front(self, x):
-        if self.head == 0 and self.tail == 0:
-            self.tail = 1
         if self.size != self.max_size:
-            self.deque[self.head] = x # error
+            self.deque[self.head] = x
             self.head = (self.head - 1) % self.max_size
             self.size += 1
-            print(self.deque, self.head, self.tail)
         else:
             print("error")
 
@@ -48,8 +55,6 @@ class RingBufferDeque:
             x = self.deque[self.tail]
             self.deque[self.tail] = None
             self.size -= 1
-            if self.is_empty():
-                self.tail = self.head = 0
             print(x)
 
     def pop_front(self):
@@ -60,8 +65,6 @@ class RingBufferDeque:
             x = self.deque[self.head]
             self.deque[self.head] = None
             self.size -= 1
-            if self.is_empty():
-                self.tail = self.head = 0
             print(x)
 
 

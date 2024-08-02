@@ -45,7 +45,7 @@ def binary_sum():
         else:
             reversed_sum.append(place)
 
-    if next_place == 1:
+    if next_place:
         reversed_sum.append(next_place)
 
     sum = "".join([str(i) for i in reversed_sum])

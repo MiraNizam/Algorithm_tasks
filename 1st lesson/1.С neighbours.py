@@ -25,6 +25,9 @@ def neighbours():
     for _ in range(rows):
         row = list(map(int, input().split()))
         matrix.append(row)
+    #     or
+    #  row = sys.stdin.readline().rstrip().split()
+    #  matrix.append(row)
 
     y = int(input())
     x = int(input())

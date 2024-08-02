@@ -21,7 +21,7 @@ B. Калькулятор
 поэтому итоговая сложность O(n)
 
 -- ID успешной посылки --
-https://contest.yandex.ru/contest/22781/run-report/116460973/
+https://contest.yandex.ru/contest/22781/run-report/116508986/
 """
 
 
@@ -41,22 +41,18 @@ def compute_postfix_notation():
     operands = Stack()
 
     for i in input().split(" "):
-        if i == "+":
+        if i in {"+", "-", "/", "*"}:
             x = operands.pop()
             y = operands.pop()
-            operands.push(y + x)
-        elif i == "/":
-            x = operands.pop()
-            y = operands.pop()
-            operands.push(y // x)
-        elif i == "*":
-            x = operands.pop()
-            y = operands.pop()
-            operands.push(y * x)
-        elif i == "-":
-            x = operands.pop()
-            y = operands.pop()
-            operands.push(y - x)
+
+            if i == "+":
+                operands.push(y + x)
+            elif i == "/":
+                operands.push(y // x)
+            elif i == "*":
+                operands.push(y * x)
+            elif i == "-":
+                operands.push(y - x)
         else:
             operands.push(int(i))
     return operands.pop()

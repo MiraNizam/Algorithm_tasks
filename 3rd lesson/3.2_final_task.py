@@ -16,10 +16,14 @@
 в худшем случае O(n^2)
 
 -- ПРОСТРАНСТВЕННАЯ СЛОЖНОСТЬ --
-предполагаю, что пространственная может расходоваться только на рекурсию и тогда сложность будет O(logn)
+предполагаю, что пространственная может расходоваться только на рекурсию и тогда сложность будет O(logn).
+в худшем случае O(n)
 
 -- ID успешной посылки --
-https://contest.yandex.ru/contest/23815/run-report/116878969/
+https://contest.yandex.ru/contest/23815/run-report/117033228/
+
+
+Спасибо за правки, по времени и памяти получилось экономнее 0.817s 18.57Mb
 """
 
 
@@ -50,12 +54,18 @@ def quick_sort_in_place(array, index_left, index_right, key):
         quick_sort_in_place(array, pivot_index+1, index_right, key)
 
 
-if __name__ == "__main__":
+def main():
     nums = int(input())
-    participants = [[name, int(tasks), int(penalty)] for name, tasks, penalty in (input().split(" ") for _ in range(nums))]
+    participants = [(name, int(tasks), int(penalty)) for name, tasks, penalty in
+                    (input().split(" ") for _ in range(nums))]
 
     index_left = 0
-    index_right = nums-1
-    quick_sort_in_place(participants, index_left, index_right, key=lambda participant: [-participant[1], participant[2], participant[0]])
+    index_right = nums - 1
+    quick_sort_in_place(participants, index_left, index_right,
+                        key=lambda participant: [-participant[1], participant[2], participant[0]])
     for participant in participants:
         print(participant[0])
+
+
+if __name__ == "__main__":
+    main()

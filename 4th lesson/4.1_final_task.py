@@ -57,7 +57,8 @@ def main():
     for request in requests:
         request_result = calculate_document_weight(indexes, request)
 
-        top_result = sorted(request_result, key=lambda x: (-x[1], x[0]))[:5]
+        top_result = sorted(request_result, key=lambda x: (-x[1], x[0]))[:5] # Сортировка итоговых данных делается
+        # сначала по убыванию веса, потом по возрастанию индекса документа
         print(" ".join([str(i[0]) for i in top_result]))
 
 

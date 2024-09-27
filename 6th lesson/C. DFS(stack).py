@@ -26,7 +26,7 @@ def adjacency_list(edge_list):
 
 
 def dfs(adjacency_dict, s, color, result):
-    stack = [s]
+    stack = []
     stack.append(s)  # Добавляем стартовую вершину в стек.
 
     while stack: # Пока стек не пуст:

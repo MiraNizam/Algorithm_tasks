@@ -26,7 +26,7 @@ O(∣E∣⋅log∣V∣), где ∣E∣ — количество рёбер в �
 O(∣V∣ + ∣E∣), где ∣E∣ — количество рёбер в графе, а ∣V∣ — количество вершин.
 
 -- ID успешной посылки --
-https://contest.yandex.ru/contest/25070/run-report/119374717/
+https://contest.yandex.ru/contest/25070/run-report/120522129/
 
 """
 
@@ -66,8 +66,7 @@ class Graph:
                 for next_neighbour, next_weight in self.graph[v]:
                     if next_neighbour not in visited:
                         heapq.heappush(max_heap, (-next_weight, v, next_neighbour))
-
-        return maximum_spanning_tree, len(visited)
+        return maximum_spanning_tree
 
     def __str__(self):
         return f"{self.graph}"
@@ -81,8 +80,8 @@ def main():
 
     for u, v, w in edge_list:
         graph.add_edge(u, v, w)
-    maximum_spanning_tree, visited_count = graph.find_maxst()
-    if visited_count != n:
+    maximum_spanning_tree = graph.find_maxst()
+    if len(maximum_spanning_tree) != n - 1:
         return "Oops! I did it again"
 
     total_weight = sum(weight for _, _, weight in maximum_spanning_tree)

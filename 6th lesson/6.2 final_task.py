@@ -43,29 +43,34 @@ B. Железные дороги
 
 -- ВРЕМЕННАЯ СЛОЖНОСТЬ --
 O(∣E∣ + ∣V∣), где ∣E∣ — количество рёбер в графе, а ∣V∣ — количество вершин.
+O(n^2), где  n - количество городов.
 
 -- ПРОСТРАНСТВЕННАЯ СЛОЖНОСТЬ --
 O(∣V∣), где ∣V∣ — количество вершин.
+O(n), где  n - количество городов.
 
 -- ID успешной посылки --
-https://contest.yandex.ru/contest/25070/run-report/119557243/
+https://contest.yandex.ru/contest/25070/run-report/120528026/
 
 """
+WHITE = 0
+GRAY = 1
+BLACK = 2
 
 
 def dfs(vertex, adjacency, components):
     stack = [vertex]
     while stack:
         v = stack[-1]
-        if components[v] == 0:
-            components[v] = 1
+        if components[v] == WHITE:
+            components[v] = GRAY
             for neighbor in adjacency[v]:
-                if components[neighbor] == 0:
+                if components[neighbor] == WHITE:
                     stack.append(neighbor)
-                elif components[neighbor] == 1:
+                elif components[neighbor] == GRAY:
                     return True
         else:
-            components[v] = 2
+            components[v] = BLACK
             stack.pop()
     return False
 
@@ -81,9 +86,9 @@ def is_optimal(n, rail_map):
                 adjacency[i].append(target_city)
             elif rail_map[i][j] == "B":
                 adjacency[target_city].append(i)
-    components = [0] * len(adjacency)
+    components = [WHITE] * len(adjacency)
     for vertex in range(len(adjacency)):
-        if components[vertex] == 0 and dfs(vertex, adjacency, components):
+        if components[vertex] == WHITE and dfs(vertex, adjacency, components):
             return "NO"
     return "YES"
 

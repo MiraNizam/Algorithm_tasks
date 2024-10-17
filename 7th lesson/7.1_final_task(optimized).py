@@ -36,7 +36,7 @@ O(st), где s — длина 1-ой строки, t - длина 2-ой стр
 O(s), где s — длина строки
 
 -- ID успешной посылки --
-https://contest.yandex.ru/contest/25597/run-report/120782420/
+https://contest.yandex.ru/contest/25597/run-report/121335704/
 
 """
 

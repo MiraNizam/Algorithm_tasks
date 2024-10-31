@@ -41,7 +41,7 @@ https://contest.yandex.ru/contest/25597/run-report/121335704/
 """
 
 
-def find_levenshtein_distance(s, t):
+def find_levenshtein_distance(s: str, t: str) -> int:  # "обязательно прописать типы данных", у меня вроде не прописаны были типы данных, это имелось ввиду?
     len_s = len(s)
     len_t = len(t)
     previous_row = list(range(len_t + 1))

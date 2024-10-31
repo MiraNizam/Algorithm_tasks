@@ -22,6 +22,7 @@ E. Вставка строк
 
 """
 
+
 def insert_strs(s, n, new_strs):
     upd_str = ""
     prev_slice = 0

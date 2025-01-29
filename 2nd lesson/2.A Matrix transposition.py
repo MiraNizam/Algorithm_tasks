@@ -13,27 +13,37 @@ A. Мониторинг
 Напечатайте транспонированную матрицу в том же формате, который задан во входных данных.
 Каждая строка матрицы выводится на отдельной строке, элементы разделяются пробелами.
 """
-#
-#
-# def matrix_transposition():
-#     string_number = int(input())
-#     column_number = int(input())
-#     old_matrix = [input().split(' ') for j in range(string_number)]
-#
-#     for i in range(column_number):
-#         for j in range(string_number):
-#             print(old_matrix[j][i], end=' ')
-#         print('')
+
+
+# def matrix_transposition(string_number, column_number, matrix):
+#     new_matrix = [[0 for _ in range(string_number)] for _ in range(column_number)]
+#     print(new_matrix)
+#     for i in range(string_number):
+#         print(i)
+#         for j in range(column_number):
+#             print(j)
+#             new_matrix[j][i] = matrix[i][j]
+#     print(new_matrix)
 #
 #
 # if __name__ == "__main__":
-#     matrix_transposition()
+#     string_number = int(input())
+#     column_number = int(input())
+#     matrix = [input().split(' ') for j in range(string_number)]
+#     matrix_transposition(string_number, column_number, matrix)
+#
 
-mas = [['й', 'ц', 'у'], ['к','е','н'], ['г', 'ш', 'щ']]
-a = 3
-matrix = [0] * a
-print(matrix)
 
-for i in range(a):
-    matrix[i] = [1] * a
-print(matrix)
+def matrix_transposition():
+    string_number = int(input())
+    column_number = int(input())
+    old_matrix = [input().split(' ') for j in range(string_number)]
+
+    for i in range(column_number):
+        for j in range(string_number):
+            print(old_matrix[j][i], end=' ')
+        print('')
+
+
+if __name__ == "__main__":
+    matrix_transposition()

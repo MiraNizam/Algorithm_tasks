@@ -17,15 +17,18 @@ F. Палиндром
 
 
 def palindrom():
-    phrase = input().lower()
-    upgrade_phrase = []
-    for i in phrase:
-        if i.isalnum():
-            upgrade_phrase.append(i)
+    phrase = list(input().lower())
+    upgrade_phrase = phrase.copy()
 
-    reverse_phrase = list(reversed(upgrade_phrase))
+    first_index = 0
+    last_index = len(upgrade_phrase)-1
 
-    if upgrade_phrase == reverse_phrase:
+    while last_index > first_index:
+        upgrade_phrase[first_index], upgrade_phrase[last_index] = upgrade_phrase[last_index], upgrade_phrase[first_index]
+        last_index -= 1
+        first_index += 1
+
+    if upgrade_phrase == phrase:
         print(True)
     else:
         print(False)

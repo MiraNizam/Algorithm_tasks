@@ -147,9 +147,57 @@ def subarray_sum(nums: list[int], k: int) -> int:
 ```
 
 └── Counter / defaultdict / hashing
+ нужны, когда в задаче фигурируют фразы:
+«частота элементов», «сколько раз встречается…»
+«есть ли дубликаты», «найти элемент, который встречается ровно 1 раз»
+«анаграммы», «сгруппировать по какому-то признаку»
+Ты не пишешь вручную словарь и не проверяешь if key in dict, а сразу используешь готовые контейнеры из collections.
+Counter — счётчик частот
+```
+from collections import Counter
+
+arr = [1, 2, 2, 3, 3, 3]
+freq = Counter(arr)
+# freq: {1:1, 2:2, 3:3}  [web:23][web:41]
+```
+defaultdict — словарь с автоматическим значением
+```
+from collections import defaultdict
+
+groups = defaultdict(list)       # значение по умолчанию — пустой список [web:38][web:24]
+
+for word in ["eat", "tea", "tan", "ate", "nat", "bat"]:
+    key = "".join(sorted(word))  # сортируем буквы: "aet", "ant", "abt"
+    groups[key].append(word)
+
+# groups = {
+#   "aet": ["eat", "tea", "ate"],
+#   "ant": ["tan", "nat"],
+#   "abt": ["bat"]
+# }
+```
 
 Поиск и сортировки
 ├── Binary Search (бинарный поиск)
+сигналы: 
+«отсортированный массив» + «найти элемент / границу»
+«минимально/максимально возможное значение при условии»
+«предикат монотонный» — то есть если значение X подходит, то X+1 тоже подходит (или наоборот)
+```
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return -1  # не нашли
+```
 ├── bisect (bisect_left, bisect_right)
 └── Custom Sort (сортировка с ключом/компаратором)
 
@@ -162,3 +210,5 @@ def subarray_sum(nums: list[int], k: int) -> int:
 ├── Мемоизация (top-down, @lru_cache)
 ├── Табличный DP (bottom-up)
 └── Классические паттерны (рюкзак, LCS, LIS, coin change)
+
+

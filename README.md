@@ -199,6 +199,35 @@ def binary_search(arr, target):
 
     return -1  # не нашли
 ```
+бинпоиск по ответу
+```
+def aggressive_cows(stalls: list, k: int) -> int:
+    sorted_stalls = sorted(stalls)
+
+    left, right = 1, sorted_stalls[-1] - sorted_stalls[0]
+    best = 0
+    while left <= right:
+        mid = (left + right) // 2
+        if can_place(stalls, k, mid):
+            best = mid
+            left = mid + 1
+        else:
+            right = mid - 1
+    return best
+
+def can_place(stalls, k, d):
+    placed_cows = 1
+    last_placed = stalls[0]
+
+    for x in stalls[1:]:
+        if x - last_placed >= d:
+            placed_cows += 1
+            last_placed = x
+            if placed_cows == k:
+                return True
+    return False
+```
+
 ### **├── bisect (bisect_left, bisect_right)**
 ### **└── Custom Sort (сортировка с ключом/компаратором)**
 

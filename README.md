@@ -232,7 +232,244 @@ def can_place(stalls, k, d):
 ### **└── Custom Sort (сортировка с ключом/компаратором)**
 
 ## **Графы и деревья**
+1. Список смежности (adjacency list) — самый популярный
+```
+# Ориентированный граф: 1→2, 1→3, 2→4, 3→4
+graph = {
+    1: [2, 3],
+    2: [4],
+    3: [4],
+    4: []
+}
+2. Матрица смежности (adjacency matrix)
+
+```
+# 4 вершины, graph[i][j] = 1 если есть ребро i→j
+```
+graph = [
+    [0, 1, 1, 0],  # вершина 0
+    [0, 0, 0, 1],  # вершина 1
+    [0, 0, 0, 1],  # вершина 2
+    [0, 0, 0, 0],  # вершина 3
+]
+```
+3. Список рёбер (edge list)
+```
+ edges = [(1, 2), (1, 3), (2, 4), (3, 4)]
+```
+строишь список смежности
+```
+from collections import defaultdict
+
+n, m = map(int, input().split())  # n вершин, m рёбер
+graph = defaultdict(list)
+
+for _ in range(m):
+    u, v = map(int, input().split())
+    graph[u].append(v)          # ориентированный
+    # graph[v].append(u)        # раскомментировать для неориентированного
+```
+Топологическая сортировка — это линейный порядок вершин ориентированного графа без циклов (DAG), 
+Распознать задачу на граф
+
+| Что написано в условии                   | Что это на самом деле              |
+| ---------------------------------------- | ---------------------------------- |
+| «N объектов», «M связей/зависимостей»    | Вершины и рёбра                    |
+| «A зависит от B», «A нужно сделать до B» | Ориентированное ребро B → A        |
+| «Можно перейти из A в B»                 | Ребро (может быть ориентированным) |
+| «Найди порядок выполнения»               | Топологическая сортировка          |
+| «Достижимо ли X из Y»                    | DFS/BFS обход                      |
+| «Сколько групп/островов/компонент»       | Компоненты связности               |
+| «Есть ли цикл/противоречие»              | Поиск цикла через DFS              |
+Варианты задач:
+1. Достижимость вершин
+Тип задачи: «Можно ли добраться из A в B», «какие вершины достижимы из S».
+2. Компоненты связности (сколько «островов»)
+Тип задачи: «Сколько групп вершин, между которыми есть пути», «сколько связных компонент в графе».
+```
+components = 0
+
+for v in range(1, n + 1):
+    if not visited[v]:
+        dfs(v)
+        components += 1
+
+print(components)
+```
+3. Поиск цикла
+ 3.1. Цикл в неориентированном графе
+```
+has_cycle = False
+parent = [-1] * (n + 1)
+
+def dfs(v):
+    global has_cycle
+    visited[v] = True
+    for u in graph[v]:
+        if not visited[u]:
+            parent[u] = v
+            dfs(u)
+        elif u != parent[v]:
+            has_cycle = True
+```
+3.2. Цикл в ориентированном графе (раскраска)
+```
+import sys
+from collections import defaultdict
+sys.setrecursionlimit(200000)
+input = sys.stdin.readline
+
+n, m = map(int, input().split())
+graph = defaultdict(list)
+for _ in range(m):
+    u, v = map(int, input().split())
+    graph[u].append(v)
+
+WHITE, GRAY, BLACK = 0, 1, 2
+color = [WHITE] * (n + 1)
+has_cycle = False
+
+def dfs(v):
+    global has_cycle
+    color[v] = GRAY
+    for neighbor in graph[v]:
+        if color[neighbor] == GRAY:
+            has_cycle = True
+            return
+        if color[neighbor] == WHITE:
+            dfs(neighbor)
+    color[v] = BLACK
+
+for v in range(1, n + 1):
+    if color[v] == WHITE:
+        dfs(v)
+
+print("YES" if has_cycle else "NO")
+
+```
+4. Топологическая сортировка (Topsort)
+Тип задачи: «Найти порядок выполнения задач/курсов/операций с зависимостями».
+```
+WHITE, GRAY, BLACK = 0, 1, 2
+color = [WHITE] * (n + 1)
+order = []
+has_cycle = False
+
+def dfs(v):
+    global has_cycle
+    color[v] = GRAY
+    for u in graph[v]:
+        if color[u] == GRAY:
+            has_cycle = True
+            return
+        if color[u] == WHITE:
+            dfs(u)
+    color[v] = BLACK
+    order.append(v)   # добавляем при выходе из вершины!
+
+for v in range(1, n + 1):
+    if color[v] == WHITE:
+        dfs(v)
+
+if has_cycle:
+    print(-1)
+else:
+    print(*order[::-1])
+```
+5. Подсчёт чего-то по поддереву / компоненте
+Например: «сколько вершин в этой компоненте», «какова сумма весов в этой группе».
+
+```
+def dfs_size(v):
+    visited[v] = True
+    size = 1
+    for u in graph[v]:
+        if not visited[u]:
+            size += dfs_size(u)
+    return size
+
+component_sizes = []
+for v in range(1, n + 1):
+    if not visited[v]:
+        component_sizes.append(dfs_size(v))
+
+print(component_sizes)
+```
+6. Время входа/выхода (tin / tout)
+```
+timer = 0
+tin = [0] * (n + 1)
+tout = [0] * (n + 1)
+
+def dfs(v):
+    global timer
+    visited[v] = True
+    tin[v] = timer
+    timer += 1
+    for u in graph[v]:
+        if not visited[u]:
+            dfs(u)
+    tout[v] = timer
+    timer += 1
+```
+7. Мосты и точки сочленения (шарниры)
+
 ### **├── DFS (обход в глубину)**
+
+обход бывает рекурсивный и итеративный
+```
+import sys
+from collections import defaultdict
+sys.setrecursionlimit(200000)
+input = sys.stdin.readline          # быстрый ввод, важно на контестах
+
+# === ЧТЕНИЕ ГРАФА (всегда одно и то же) ===
+n, m = map(int, input().split())
+graph = defaultdict(list)
+for _ in range(m):
+    u, v = map(int, input().split())
+    graph[u].append(v)
+    # graph[v].append(u)  # раскомментировать если граф НЕориентированный
+
+# === DFS С РАСКРАСКОЙ (всегда одна и та же структура) ===
+WHITE, GRAY, BLACK = 0, 1, 2
+color = [WHITE] * (n + 1)
+order = []
+has_cycle = False
+
+def dfs(v):
+    global has_cycle
+    color[v] = GRAY
+    for u in graph[v]:
+        if color[u] == GRAY:
+            has_cycle = True
+            return
+        if color[u] == WHITE:
+            dfs(u)
+    color[v] = BLACK
+    order.append(v)           # ← меняй эту строку под задачу
+
+for v in range(1, n + 1):
+    if color[v] == WHITE:
+        dfs(v)
+
+# === ОТВЕТ (зависит от задачи) ===
+if has_cycle:
+    print(-1)
+else:
+    print(*order[::-1])
+   
+```
+| Задача           | Граф      | Что добавляется к базовому DFS                       |
+| ---------------- | --------- | ---------------------------------------------------- |
+| Достижимость     | ори/неори | ничего — просто visited[t] после запуска из s        |
+| Компоненты       | неори     | счётчик запусков + graph[v].append(u)                |
+| Размер компонент | неори     | dfs возвращает size, суммируем size += dfs(neighbor) |
+| Цикл (неори)     | неори     | parent + elif u != parent                            |
+| Цикл (ори)       | ори       | color WHITE/GRAY/BLACK + проверка на GRAY            |
+| Топосорт         | ори, DAG  | color + order.append(v) при выходе + order[::-1]     |
+
+
 ### **├── BFS (обход в ширину)**
 ### **└── Union-Find / DSU (система непересекающихся множеств)**
 

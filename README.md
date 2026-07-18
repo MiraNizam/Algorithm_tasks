@@ -537,7 +537,7 @@ dist = bfs(s)
 print(dist[t])
 
 BFS на сетке. Немного другой граф: вершины — это клетки, а не пронумерованные вершины 1..N.
-
+```
 from collections import deque
 
 n, m = map(int, input().split())
@@ -560,6 +560,7 @@ while queue:
             queue.append((nx, ny))
 
 print(dist[fx][fy])
+```
 ### **└── Union-Find / DSU (система непересекающихся множеств)**
 
 ## **Динамическое программирование**

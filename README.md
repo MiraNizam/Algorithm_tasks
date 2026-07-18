@@ -244,7 +244,7 @@ graph = {
 2. Матрица смежности (adjacency matrix)
 
 ```
-# 4 вершины, graph[i][j] = 1 если есть ребро i→j
+вершины, graph[i][j] = 1 если есть ребро i→j
 ```
 graph = [
     [0, 1, 1, 0],  # вершина 0
@@ -416,7 +416,25 @@ def dfs(v):
 
 ### **├── DFS (обход в глубину)**
 
-обход бывает рекурсивный и итеративный
+обход бывает рекурсивный (примеры выше и ниже)
+
+итеративный:
+
+def dfs_iterative(graph: dict, start: str) -> set:
+    visited = set()
+    stack = [start]
+    
+    while stack:
+        node = stack.pop()          # достаём сверху (LIFO!)
+        if node not in visited:
+            visited.add(node)
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    stack.append(neighbor)
+    
+    return visited
+
+
 ```
 import sys
 from collections import defaultdict
@@ -471,6 +489,77 @@ else:
 
 
 ### **├── BFS (обход в ширину)**
+DFS использует стек (или рекурсию — это и есть стек).
+BFS использует очередь (queue, FIFO — первый пришёл, первый вышел).
+Главная суперсила BFS — кратчайшее расстояние
+BFS гарантирует: когда мы впервые достигаем вершины t — мы прошли минимальное количество рёбер
+from collections import deque
+
+visited = [False] * (n + 1)
+
+def bfs(s):
+    queue = deque([s])      # очередь, стартуем из s
+    visited[s] = True
+
+    while queue:
+        v = queue.popleft() # берём СЛЕВА (FIFO, не pop()!)
+        for neighbor in graph[v]:
+            if not visited[neighbor]:
+                visited[neighbor] = True
+                queue.append(neighbor)
+
+BFS - поиск кратчайшего расстояния
+import sys
+from collections import defaultdict, deque
+sys.setrecursionlimit(200000)
+input = sys.stdin.readline
+
+n, m, s, t = map(int, input().split())
+graph = defaultdict(list)
+for _ in range(m):
+    u, v = map(int, input().split())
+    graph[u].append(v)
+    graph[v].append(u)    # граф двусторонний
+
+def bfs(s):
+    dist = [-1] * (n + 1)
+    dist[s] = 0
+    queue = deque([s])
+
+    while queue:
+        v = queue.popleft()
+        for u in graph[v]:
+            # твой код
+
+    return dist
+
+dist = bfs(s)
+print(dist[t])
+
+BFS на сетке. Немного другой граф: вершины — это клетки, а не пронумерованные вершины 1..N.
+
+from collections import deque
+
+n, m = map(int, input().split())
+sx, sy = map(int, input().split())
+fx, fy = map(int, input().split())
+grid = [input().strip() for _ in range(n)]
+
+dist = [[-1] * m for _ in range(n)]
+dist[sx][sy] = 0
+queue = deque([(sx, sy)])
+
+directions = [(-1,0), (1,0), (0,-1), (0,1)]
+
+while queue:
+    x, y = queue.popleft()
+    for dx, dy in directions:
+        nx, ny = x + dx, y + dy
+        if 0 <= nx < n and 0 <= ny < m and grid[nx][ny] == "." and dist[nx][ny] == -1:
+            dist[nx][ny] = dist[x][y] + 1
+            queue.append((nx, ny))
+
+print(dist[fx][fy])
 ### **└── Union-Find / DSU (система непересекающихся множеств)**
 
 ## **Динамическое программирование**

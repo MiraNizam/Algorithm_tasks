@@ -562,10 +562,142 @@ while queue:
 print(dist[fx][fy])
 ```
 ### **└── Union-Find / DSU (система непересекающихся множеств)**
+Сложность
+Amortized почти O(1) на операцию, благодаря сжатию пути и union by rank; память O(n) на массивы parent и rank.
+
+Сигналы в условии
+Ищи фразы: «объединить группы/друзей/компании», «проверить, принадлежат ли два элемента одной компоненте», «количество компонент меняется по ходу решения», «динамическая связность», «минимальное остовное дерево (Kruskal)».
+
+
+from collections import defaultdict
+n, m = map(int, input().split())
+
+
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n + 1))
+        self.rank = [0] * (n + 1)
+        self.components = n
+        self.size = [1] * (n + 1)
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        root_x, root_y = self.find(x), self.find(y)
+        if root_x == root_y:
+            return
+        if self.rank[root_x] > self.rank[root_y]:
+            self.parent[root_y] = root_x
+            self.size[root_x] += self.size[root_y]
+        elif self.rank[root_y] > self.rank[root_x]:
+            self.parent[root_x] = root_y
+            self.size[root_y] += self.size[root_x]
+        else:
+            self.parent[root_y] = root_x
+            self.size[root_x] += self.size[root_y]
+            self.rank[root_x] += 1
+        self.components -= 1
+
+dsu = DSU(n)
+for _ in range(m):
+    u, v = map(int, input().split())
+    dsu.union(u, v)
+    max_values = max(dsu.size[dsu.find(v)] for v in range(1, n + 1))
+    print(dsu.components, max_values)
 
 ## **Динамическое программирование**
+Универсальный алгоритм: как писать DP с нуля
+Когда видишь задачу, которая пахнет DP, пройди по этим 4 вопросам по порядку:
+
+Что такое "состояние"? Какими параметрами описывается подзадача? (В лестнице — это просто номер ступеньки n. В более сложных задачах может быть пара (индекс, остаток_веса) и т.п.)
+
+Какой базовый случай? Самая маленькая подзадача, ответ на которую ты знаешь без вычислений (n == 0 → 1 способ).
+
+Как выразить большую подзадачу через меньшие? Это и есть рекуррентное соотношение — обычно отвечает на вопрос "какой был последний шаг/выбор?".
+
+Оборачиваешь рекурсию в @lru_cache — и получаешь готовое DP-решение.
+Весь секрет DP — не в коде, а в шаге 3. Как только ты нашёл правильное рекуррентное соотношение, код почти пишется сам.
 ### **├── Мемоизация (top-down, @lru_cache)**
+DP нужен, когда задача сводится к рекурсии, но одни и те же подзадачи считаются много раз — мемоизация просто запоминает результат, чтобы не пересчитывать.
+В Python это реализуется декоратором @lru_cache (Least Recently Used Cache) из модуля functools
+Важно: аргументы dp должны быть неизменяемыми (int, tuple, str) — списки и словари lru_cache не хэширует.
+maxsize=None убирает лимит кэша — на контестах это почти всегда правильный выбор, иначе можно неожиданно "вымыть" нужные значения из LRU-кэша при большом количестве вызовов.
+```
+from functools import lru_cache
+import sys
+sys.setrecursionlimit(300000)
+
+@lru_cache(maxsize=None)
+def dp(i, *state):
+    if i == 0:
+        return base_value  # базовый случай
+    
+    result = min(dp(i - 1, ...), dp(i - 1, ...))  # переходы
+    return result
+
+answer = dp(n, initial_state)
+dp.cache_clear()  # если нужно освободить память между тестами
+
+Сложность
+O(число уникальных состояний × работа на переход), память O(число уникальных состояний) — потому что каждое состояние считается ровно один раз и кэшируется.
+
+Сигналы в условии
+«Рекурсия с повторяющимися подзадачами», «сколько способов сделать X», формулировка задачи естественно ложится на «выбор на каждом шаге» — легче думать сверху вниз, чем сразу строить таблицу.
+
+```
 ### **├── Табличный DP (bottom-up)**
+Нужно что-то максимизировать/минимизировать (сумма, количество способов, стоимость).
+Решение явно строится из более мелких подзадач.
+Наивная рекурсия считает одно и то же много раз → дерево вызовов раздувается.
+Если видишь «последовательность выбора» (брать/не брать, идти туда/сюда, делать/не делать) — почти всегда там либо greedy, либо DP.
+Tabulation (bottom-up)
+def ways(n):
+    dp = [0] * (n + 1)
+    dp[0] = 1
+    if n >= 1:
+        dp[1] = 1
+    for i in range(2, n + 1):
+        dp[i] = dp[i-1] + dp[i-2]
+    return dp[n]
 ### **└── Классические паттерны (рюкзак, LCS, LIS, coin change)**
+text1 = "abcde"
+text2 = "ace"
+
+def lcs(text1, text2):
+    """найти подпоследовательность. Состояние dp[i][j] это длина общей подпоследовательности """
+    len1 = len(text1)
+    len2 = len(text2)
+    dp = [[0] * (len2 + 1) for _ in range(len1 + 1)]
+
+    for i in range(1, len1 + 1):
+        for j in range(1, len2 + 1):
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    return dp[len1][len2]
+
+
+def edited_distance(text1, text2):
+    """сколько нужно изменений чтобы превратить слово1 в слово2. dp[i][j] кол-во изменений в подстроке"""
+    len1 = len(text1)
+    len2 = len(text2)
+    dp = [[0] * (len2 + 1) for _ in range(len1 + 1)]
+
+    for i in range(len1 + 1):
+        dp[i][0] = i
+    for j in range(len2 + 1):
+        dp[0][j] = j
+
+    for i in range(1, len1 + 1):
+        for j in range(1, len2 + 1):
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+    return dp[len1][len2]
 
 
